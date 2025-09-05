@@ -1,5 +1,24 @@
 services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: family_finance_manager  # 自动建库
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./sql:/docker-entrypoint-initdb.d"  # 容器启动时自动执行 /docker-entrypoint-initdb.d/*.sql
+      - "db_data:/var/lib/mysql"
   backend:
     build: ./backend
     ports:
       - "8080:8080"
+    environment:
+      TZ: Asia/Shanghai
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/family_finance_manager?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+volumes:
+  db_data:
