@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS family_finance_manager;
+USE family_finance_manager;
+
+CREATE TABLE IF NOT EXISTS t_test (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO t_test(name) VALUES ('Docker-MySQL-OK');
