@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     family_id BIGINT NOT NULL,
     name VARCHAR(30) NOT NULL,
-    sex CHAR(1) NOT NULL CHECK (sex IN ('M', 'F')),
+    sex CHAR(1) CHECK (sex IN ('M', 'F')),
     phone VARCHAR(20),
     password CHAR(60) NOT NULL,
     role CHAR(1) NOT NULL DEFAULT 'U' CHECK (role IN ('A', 'U')),
