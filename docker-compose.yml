@@ -10,6 +10,13 @@ services:
     volumes:
       - "./sql:/docker-entrypoint-initdb.d"  # 容器启动时自动执行 /docker-entrypoint-initdb.d/*.sql
       - "db_data:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s   # 给 MySQL 足够的启动时间
+
   backend:
     build: ./backend
     ports:
@@ -19,6 +26,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/family_finance_manager?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
