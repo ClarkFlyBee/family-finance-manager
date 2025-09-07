@@ -15,6 +15,10 @@ public interface FamilyMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")   // 把获取到的主键赋值给对象的id
     int insert(Family family);
 
+    @Select("SELECT * FROM family " +
+            "where id = #{id}")
+    User selectById(Long id);
+
     @Select("SELECT * FROM family")
     List<Family> selectAll();
 

@@ -10,7 +10,8 @@ public class IncomeVO {
     private Long id;
     private String incNo;
     private String ownerType;
-    private String ownerName; // 用户名或家庭名
+    private Long ownerId;
+    private String ownerName;
     private String categoryName;
     private BigDecimal amount;
     private LocalDateTime incTime;

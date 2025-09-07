@@ -64,17 +64,24 @@ public class IncomeService{
             throw new BizException(400, "收入记录不存在");
         }
 
-        // 权限校验（简化）
-        if ("M".equals(income.getOwnerType()) && !income.getOwnerId().equals(userId)) {
-            throw new BizException(400, "无权访问");
-        }
-        if ("F".equals(income.getOwnerType()) && !income.getOwnerId().equals(userMapper.selectById(userId).getFamilyId())) {
-            throw new BizException(400, "无权访问");
-        }
+        checkAuth(userId, income);
 
-        // 手动查询 VO（或写一个 selectVOById 方法）
-        List<IncomeVO> list = incomeMapper.selectIncomePage(null, 0, 1);
-        return list.isEmpty() ? null : list.get(0);
+        IncomeVO incomeVO = new IncomeVO();
+        incomeVO.setId(income.getId());
+        incomeVO.setIncNo(income.getIncNo());
+        incomeVO.setOwnerType(income.getOwnerType());
+        incomeVO.setOwnerId(income.getOwnerId());
+        if (income.getOwnerType().equals("M")) {
+            incomeVO.setOwnerName(userMapper.selectById(income.getOwnerId()).getName());
+        } else if(income.getOwnerType().equals("F")) {
+            incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getName());
+        }
+        incomeVO.setCategoryName(categoryMapper.selectById(income.getCategoryId()).getName());
+        incomeVO.setAmount(income.getAmount());
+        incomeVO.setIncTime(income.getIncTime());
+        incomeVO.setCreatedAt(income.getCreatedAt());
+
+        return incomeVO;
     }
 
     public PageResult listIncomes(QueryDTO query, int page, int size, Long userId) {
@@ -82,6 +89,14 @@ public class IncomeService{
 
         long total = incomeMapper.selectIncomeCount(query);
         List<IncomeVO> records = incomeMapper.selectIncomePage(query, offset, size);
+
+        for  (IncomeVO record : records) {
+            if (record.getOwnerType().equals("M")) {
+                record.setOwnerName(userMapper.selectById(record.getOwnerId()).getName());
+            } else if(record.getOwnerType().equals("F")) {
+                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getName());
+            }
+        }
 
         return new PageResult(total, records);
     }
