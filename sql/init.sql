@@ -1,5 +1,14 @@
-CREATE DATABASE IF NOT EXISTS family_finance_manager;
+-- 创建数据库并指定字符集
+CREATE DATABASE IF NOT EXISTS family_finance_manager 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+
 USE family_finance_manager;
+
+-- 确保当前数据库使用 utf8mb4
+ALTER DATABASE family_finance_manager 
+CHARACTER SET = utf8mb4 
+COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS t_test (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

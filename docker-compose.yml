@@ -5,6 +5,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: family_finance_manager  # 自动建库
+      # 强制默认字符集
+      MYSQL_INITDB_SKIP_TZINFO: "1"
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
     ports:
       - "3307:3306"
     volumes:
@@ -23,7 +28,22 @@ services:
       - "8080:8080"
     environment:
       TZ: Asia/Shanghai
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/family_finance_manager?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      LANG: en_US.UTF-8                # 设置容器语言环境
+      LC_ALL: en_US.UTF-8              # 强制所有 locale 为 UTF-8
+      JAVA_TOOL_OPTIONS: >-            # JVM 强制使用 UTF-8
+        -Dfile.encoding=UTF-8
+        -Dconsole.encoding=UTF-8
+      SPRING_DATASOURCE_URL: >
+        jdbc:mysql://db:3306/family_finance_manager?
+        useSSL=false&
+        serverTimezone=Asia/Shanghai&
+        allowPublicKeyRetrieval=true&
+        useUnicode=true&
+        characterEncoding=UTF-8&
+        characterSetResults=UTF-8&
+        connectionCollation=utf8mb4_unicode_ci&
+        useServerPrepStmts=true&
+        cachePrepStmts=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     depends_on:
