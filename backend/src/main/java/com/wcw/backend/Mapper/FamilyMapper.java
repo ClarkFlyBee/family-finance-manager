@@ -17,4 +17,7 @@ public interface FamilyMapper {
 
     @Select("SELECT * FROM family")
     List<Family> selectAll();
+
+    @Select("SELECT COUNT(*) > 0 FROM family WHERE id = #{id}")
+    boolean existsById(Long id);
 }

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wcw.backend.Mapper.IncomeMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="IncomeResultMap" type="com.wcw.backend.Entity.Income">
+        <id property="id" column="id"/>
+        <result property="incNo" column="inc_no"/>
+        <result property="ownerType" column="owner_type"/>
+        <result property="ownerId" column="owner_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="amount" column="amount"/>
+        <result property="incTime" column="inc_time"/>
+        <result property="remark" column="remark"/>
+        <result property="isDraft" column="is_draft"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <resultMap id="IncomeVOResultMap" type="com.wcw.backend.VO.IncomeVO">
+        <result property="id" column="id"/>
+        <result property="incNo" column="inc_no"/>
+        <result property="ownerType" column="owner_type"/>
+        <result property="ownerName" column="owner_name"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="amount" column="amount"/>
+        <result property="incTime" column="inc_time"/>
+        <result property="remark" column="remark"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO income (
+            inc_no, owner_type, owner_id, category_id,
+            amount, inc_time, remark, is_draft,
+            created_at, updated_at
+        ) VALUES (
+                     #{incNo}, #{ownerType}, #{ownerId}, #{categoryId},
+                     #{amount}, #{incTime}, #{remark}, #{isDraft},
+                     NOW(), NOW()
+                 )
+    </insert>
+
+    <!-- 根据 ID 查询 -->
+    <select id="selectById" resultMap="IncomeResultMap">
+        SELECT *
+        FROM income
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询总数（用于分页） -->
+    <select id="selectIncomeCount" resultType="long">
+        SELECT COUNT(*)
+        FROM income i
+        LEFT JOIN category c ON i.category_id = c.id
+        LEFT JOIN user u ON i.owner_type = 'M' AND i.owner_id = u.id
+        LEFT JOIN family f ON i.owner_type = 'F' AND i.owner_id = f.id
+        WHERE 1=1
+        <if test="query.ownerType != null">
+            AND i.owner_type = #{query.ownerType}
+        </if>
+        <if test="query.ownerId != null">
+            AND i.owner_id = #{query.ownerId}
+        </if>
+        <if test="query.categoryId != null">
+            AND i.category_id = #{query.categoryId}
+        </if>
+        <if test="query.startTime != null">
+            AND i.inc_time >= #{query.startTime}
+        </if>
+        <if test="query.endTime != null">
+            AND i.inc_time &lt;= #{query.endTime}
+        </if>
+        <if test="query.keyword != null and query.keyword != ''">
+            AND i.remark LIKE CONCAT('%', #{query.keyword}, '%')
+        </if>
+    </select>
+
+    <!-- 分页查询 VO -->
+    <select id="selectIncomePage" resultMap="IncomeVOResultMap">
+        SELECT
+        i.id,
+        i.inc_no,
+        i.owner_type,
+        i.owner_id,
+        c.name AS category_name,
+        i.amount,
+        i.inc_time,
+        i.remark,
+        i.created_at
+        FROM income i
+        LEFT JOIN category c ON i.category_id = c.id
+        WHERE 1=1
+        <if test="query != null">
+            <if test="query.ownerType != null">
+                AND i.owner_type = #{query.ownerType}
+            </if>
+            <if test="query.ownerId != null">
+                AND i.owner_id = #{query.ownerId}
+            </if>
+            <if test="query.categoryId != null">
+                AND i.category_id = #{query.categoryId}
+            </if>
+            <if test="query.startTime != null">
+                AND i.inc_time >= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                AND i.inc_time &lt;= #{query.endTime}
+            </if>
+            <if test="query.keyword != null and query.keyword != ''">
+                AND i.remark LIKE CONCAT('%', #{query.keyword}, '%')
+            </if>
+        </if>
+            ORDER BY i.inc_time DESC
+            LIMIT #{offset}, #{size}
+    </select>
+
+        <!-- 更新 -->
+        <update id="update">
+            UPDATE income SET
+                  owner_type = #{ownerType},
+                  owner_id = #{ownerId},
+                  category_id = #{categoryId},
+                  amount = #{amount},
+                  inc_time = #{incTime},
+                  remark = #{remark},
+                  is_draft = #{isDraft},
+                  updated_at = NOW()
+            WHERE id = #{id}
+        </update>
+
+        <!-- 删除 -->
+        <delete id="deleteById">
+            DELETE FROM income WHERE id = #{id}
+        </delete>
+
+</mapper>

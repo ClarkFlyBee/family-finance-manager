@@ -1,9 +1,13 @@
 package com.wcw.backend.Util;
 
+import com.wcw.backend.Common.BizException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.HttpServletRequest;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -29,5 +33,43 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    /**
+     * 从请求头中提取 Token
+     */
+    public static String extractToken(HttpServletRequest request){
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")){
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    /**
+     * 从 HttpServletRequest 中解析出用户 ID
+     * @return 用户 ID
+     * @throws BizException 如果未登录或 Token 无效
+     */
+    public static Long getUserId(HttpServletRequest request){
+        String token = extractToken(request);
+        if (token == null){
+            throw new BizException(401, "未提供登录凭证，请重新登录");
+        }
+
+        try{
+            Claims claims = JwtUtil.parse(token);
+            Long userId = claims.get("uid", Long.class);
+            if (userId == null){
+                throw new BizException(401, "Token 中不包含用户信息");
+            }
+            return userId;
+        } catch (MalformedJwtException | SignatureException e){
+            throw new BizException(401, "无效的 Token");
+        } catch (ExpiredJwtException e){
+            throw new BizException(401, "登录已过期，请重新登录");
+        } catch (Exception e){
+            throw new BizException(500, "Token 解析失败：" + e.getMessage());
+        }
     }
 }
