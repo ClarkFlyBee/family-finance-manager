@@ -3,7 +3,7 @@ package com.wcw.backend.Controller;
 import com.wcw.backend.Common.PageResult;
 import com.wcw.backend.Common.Result;
 import com.wcw.backend.DTO.IncomeDTO;
-import com.wcw.backend.DTO.IncomeQueryDTO;
+import com.wcw.backend.DTO.QueryDTO;
 import com.wcw.backend.Entity.Income;
 import com.wcw.backend.Service.IncomeService;
 import com.wcw.backend.Util.JwtUtil;
@@ -36,7 +36,7 @@ public class IncomeController {
     }
 
     @GetMapping
-    public Result<PageResult> list(IncomeQueryDTO query,
+    public Result<PageResult> list(QueryDTO query,
                                    @RequestParam(defaultValue = "1") int page,
                                    @RequestParam(defaultValue = "10") int size,
                                    HttpServletRequest request) {

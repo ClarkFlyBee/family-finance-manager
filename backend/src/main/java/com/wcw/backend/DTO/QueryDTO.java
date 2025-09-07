@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class IncomeQueryDTO {
+public class QueryDTO {
     private String ownerType;
     private Long ownerId;
     private Long categoryId;

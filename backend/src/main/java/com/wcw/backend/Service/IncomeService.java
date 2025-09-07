@@ -3,18 +3,18 @@ package com.wcw.backend.Service;
 import com.wcw.backend.Common.BizException;
 import com.wcw.backend.Common.PageResult;
 import com.wcw.backend.DTO.IncomeDTO;
-import com.wcw.backend.DTO.IncomeQueryDTO;
+import com.wcw.backend.DTO.QueryDTO;
 import com.wcw.backend.Entity.Category;
 import com.wcw.backend.Entity.Income;
 import com.wcw.backend.Mapper.CategoryMapper;
 import com.wcw.backend.Mapper.FamilyMapper;
 import com.wcw.backend.Mapper.IncomeMapper;
 import com.wcw.backend.Mapper.UserMapper;
+import com.wcw.backend.VO.ExpenseVO;
 import com.wcw.backend.VO.IncomeVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,8 +32,6 @@ public class IncomeService{
     public Income createIncome(IncomeDTO dto, Long userId) {
         // 校验分类
         Category category = categoryMapper.selectById(dto.getCategoryId());
-
-        System.out.println(category);
 
         if (category == null || !"I".equals(category.getType())) {
             throw new BizException(400, "收入分类不存在或类型错误");
@@ -79,7 +77,7 @@ public class IncomeService{
         return list.isEmpty() ? null : list.get(0);
     }
 
-    public PageResult listIncomes(IncomeQueryDTO query, int page, int size, Long userId) {
+    public PageResult listIncomes(QueryDTO query, int page, int size, Long userId) {
         int offset = (page - 1) * size;
 
         long total = incomeMapper.selectIncomeCount(query);
