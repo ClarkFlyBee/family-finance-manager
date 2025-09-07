@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wcw.backend.Mapper.CategoryMapper">
+
+    <resultMap id="CategoryResultMap" type="com.wcw.backend.Entity.Category">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="visibility" column="visibility"/>
+        <result property="isSystem" column="is_system"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="CategoryResultMap">
+        SELECT * FROM category WHERE id = #{id}
+    </select>
+
+    <select id="selectByOwner" resultMap="CategoryResultMap">
+        SELECT DISTINCT c.*
+        FROM category c
+        WHERE c.type = #{type}
+          AND (
+            c.is_system = 1  -- 系统内置
+                OR c.created_by = #{userId}  -- 用户自定义
+            )
+        ORDER BY c.created_at DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO category (name, type, created_by, visibility, is_system, created_at, updated_at)
+        VALUES (#{name}, #{type}, #{createdBy}, #{visibility}, #{isSystem}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE category SET
+                            name = #{name},
+                            created_by = #{createdBy},
+                            visibility = #{visibility},
+                            updated_at = NOW()
+        WHERE id = #{id} AND is_system = 0  -- 只允许修改自定义分类
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM category
+        WHERE id = #{id} AND is_system = 0
+    </delete>
+
+</mapper>
