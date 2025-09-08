@@ -4,6 +4,7 @@
 
     <resultMap id="CategoryResultMap" type="com.wcw.backend.Entity.Category">
         <id property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
         <result property="name" column="name"/>
         <result property="type" column="type"/>
         <result property="createdBy" column="created_by"/>
@@ -12,6 +13,10 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
+
+    <select id="selectAll" resultMap="CategoryResultMap">
+        SELECT * FROM category
+    </select>
 
     <select id="selectById" resultMap="CategoryResultMap">
         SELECT * FROM category WHERE id = #{id}
@@ -29,8 +34,8 @@
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO category (name, type, created_by, visibility, is_system, created_at, updated_at)
-        VALUES (#{name}, #{type}, #{createdBy}, #{visibility}, #{isSystem}, NOW(), NOW())
+        INSERT INTO category (parent_id, name, type, created_by, visibility, is_system, created_at, updated_at)
+        VALUES (#{parentId}, #{name}, #{type}, #{createdBy}, #{visibility}, #{isSystem}, NOW(), NOW())
     </insert>
 
     <update id="update">

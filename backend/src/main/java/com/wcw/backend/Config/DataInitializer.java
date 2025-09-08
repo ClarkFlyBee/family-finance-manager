@@ -7,9 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -18,149 +16,160 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    // 定义所有初始化数据：parent_id, type, name, is_system, visibility
-    private static final List<Object[]> INIT_DATA = Arrays.asList(
-            // 收入大类 (type = 'I')
-            new Object[]{0L, "I", "工资收入", 1, "P"},
-            new Object[]{0L, "I", "投资理财", 1, "P"},
-            new Object[]{0L, "I", "兼职副业", 1, "P"},
-            new Object[]{0L, "I", "红包礼金", 1, "P"},
-            new Object[]{0L, "I", "其他收入", 1, "P"},
+    // 使用 Map 来组织数据：key = type, value = List of (parentName, categoryName)
+    // 如果 parentName 为 null，表示是大类
+    private static final Map<String, List<Object[]>> INIT_DATA = new LinkedHashMap<>();
 
-            // 收入子类 - 工资收入
-            new Object[]{1L, "I", "基本工资", 1, "P"},
-            new Object[]{1L, "I", "绩效奖金", 1, "P"},
-            new Object[]{1L, "I", "年终奖", 1, "P"},
+    static {
+        // 收入大类
+        INIT_DATA.put("I", new ArrayList<>(Arrays.asList(
+                new Object[]{null, "工资收入"},
+                new Object[]{null, "投资理财"},
+                new Object[]{null, "兼职副业"},
+                new Object[]{null, "红包礼金"},
+                new Object[]{null, "其他收入"},
 
-            // 投资理财
-            new Object[]{2L, "I", "银行利息", 1, "P"},
-            new Object[]{2L, "I", "股票收益", 1, "P"},
-            new Object[]{2L, "I", "基金收益", 1, "P"},
-            new Object[]{2L, "I", "理财产品", 1, "P"},
+                new Object[]{"工资收入", "基本工资"},
+                new Object[]{"工资收入", "绩效奖金"},
+                new Object[]{"工资收入", "年终奖"},
 
-            // 兼职副业
-            new Object[]{3L, "I", "自由职业", 1, "P"},
-            new Object[]{3L, "I", "网络兼职", 1, "P"},
+                new Object[]{"投资理财", "银行利息"},
+                new Object[]{"投资理财", "股票收益"},
+                new Object[]{"投资理财", "基金收益"},
+                new Object[]{"投资理财", "理财产品"},
 
-            // 红包礼金
-            new Object[]{4L, "I", "节日红包", 1, "P"},
-            new Object[]{4L, "I", "生日礼金", 1, "P"},
+                new Object[]{"兼职副业", "自由职业"},
+                new Object[]{"兼职副业", "网络兼职"},
 
-            // 其他收入
-            new Object[]{5L, "I", "退款收入", 1, "P"},
-            new Object[]{5L, "I", "意外之财", 1, "P"},
+                new Object[]{"红包礼金", "节日红包"},
+                new Object[]{"红包礼金", "生日礼金"},
 
-            // 支出大类 (type = 'E')
-            new Object[]{0L, "E", "日常饮食", 1, "P"},
-            new Object[]{0L, "E", "交通出行", 1, "P"},
-            new Object[]{0L, "E", "居住开销", 1, "P"},
-            new Object[]{0L, "E", "娱乐休闲", 1, "P"},
-            new Object[]{0L, "E", "购物消费", 1, "P"},
-            new Object[]{0L, "E", "医疗健康", 1, "P"},
-            new Object[]{0L, "E", "学习提升", 1, "P"},
-            new Object[]{0L, "E", "人情往来", 1, "P"},
-            new Object[]{0L, "E", "服饰美容", 1, "P"},
-            new Object[]{0L, "E", "其他支出", 1, "P"},
+                new Object[]{"其他收入", "退款收入"},
+                new Object[]{"其他收入", "意外之财"}
+        )));
 
-            // 支出子类 - 日常饮食
-            new Object[]{11L, "E", "早餐", 1, "P"},
-            new Object[]{12L, "E", "午餐", 1, "P"},
-            new Object[]{13L, "E", "晚餐", 1, "P"},
-            new Object[]{14L, "E", "零食饮料", 1, "P"},
-            new Object[]{15L, "E", "水果生鲜", 1, "P"},
+        // 支出大类
+        INIT_DATA.put("E", new ArrayList<>(Arrays.asList(
+                new Object[]{null, "日常饮食"},
+                new Object[]{null, "交通出行"},
+                new Object[]{null, "居住开销"},
+                new Object[]{null, "娱乐休闲"},
+                new Object[]{null, "购物消费"},
+                new Object[]{null, "医疗健康"},
+                new Object[]{null, "学习提升"},
+                new Object[]{null, "人情往来"},
+                new Object[]{null, "服饰美容"},
+                new Object[]{null, "其他支出"},
 
-            // 交通出行
-            new Object[]{16L, "E", "公交地铁", 1, "P"},
-            new Object[]{17L, "E", "打车出行", 1, "P"},
-            new Object[]{18L, "E", "私家车费", 1, "P"},
-            new Object[]{19L, "E", "加油充电", 1, "P"},
+                new Object[]{"日常饮食", "早餐"},
+                new Object[]{"日常饮食", "午餐"},
+                new Object[]{"日常饮食", "晚餐"},
+                new Object[]{"日常饮食", "零食饮料"},
+                new Object[]{"日常饮食", "水果生鲜"},
 
-            // 居住开销
-            new Object[]{20L, "E", "房租", 1, "P"},
-            new Object[]{21L, "E", "房贷", 1, "P"},
-            new Object[]{22L, "E", "水电煤", 1, "P"},
-            new Object[]{23L, "E", "物业费", 1, "P"},
-            new Object[]{24L, "E", "宽带网络", 1, "P"},
+                new Object[]{"交通出行", "公交地铁"},
+                new Object[]{"交通出行", "打车出行"},
+                new Object[]{"交通出行", "私家车费"},
+                new Object[]{"交通出行", "加油充电"},
 
-            // 娱乐休闲
-            new Object[]{25L, "E", "电影演出", 1, "P"},
-            new Object[]{26L, "E", "旅游出行", 1, "P"},
-            new Object[]{27L, "E", "游戏充值", 1, "P"},
-            new Object[]{28L, "E", "KTV酒吧", 1, "P"},
+                new Object[]{"居住开销", "房租"},
+                new Object[]{"居住开销", "房贷"},
+                new Object[]{"居住开销", "水电煤"},
+                new Object[]{"居住开销", "物业费"},
+                new Object[]{"居住开销", "宽带网络"},
 
-            // 购物消费
-            new Object[]{29L, "E", "日用品", 1, "P"},
-            new Object[]{30L, "E", "数码产品", 1, "P"},
-            new Object[]{31L, "E", "家居用品", 1, "P"},
+                new Object[]{"娱乐休闲", "电影演出"},
+                new Object[]{"娱乐休闲", "旅游出行"},
+                new Object[]{"娱乐休闲", "游戏充值"},
+                new Object[]{"娱乐休闲", "KTV酒吧"},
 
-            // 医疗健康
-            new Object[]{32L, "E", "门诊费用", 1, "P"},
-            new Object[]{33L, "E", "药品费用", 1, "P"},
-            new Object[]{34L, "E", "体检费用", 1, "P"},
+                new Object[]{"购物消费", "日用品"},
+                new Object[]{"购物消费", "数码产品"},
+                new Object[]{"购物消费", "家居用品"},
 
-            // 学习提升
-            new Object[]{35L, "E", "书籍购买", 1, "P"},
-            new Object[]{36L, "E", "在线课程", 1, "P"},
-            new Object[]{37L, "E", "培训费用", 1, "P"},
+                new Object[]{"医疗健康", "门诊费用"},
+                new Object[]{"医疗健康", "药品费用"},
+                new Object[]{"医疗健康", "体检费用"},
 
-            // 人情往来
-            new Object[]{38L, "E", "请客吃饭", 1, "P"},
-            new Object[]{39L, "E", "送礼支出", 1, "P"},
-            new Object[]{40L, "E", "红包支出", 1, "P"},
+                new Object[]{"学习提升", "书籍购买"},
+                new Object[]{"学习提升", "在线课程"},
+                new Object[]{"学习提升", "培训费用"},
 
-            // 服饰美容
-            new Object[]{41L, "E", "服装鞋帽", 1, "P"},
-            new Object[]{42L, "E", "化妆品", 1, "P"},
-            new Object[]{43L, "E", "理发美容", 1, "P"}
-    );
+                new Object[]{"人情往来", "请客吃饭"},
+                new Object[]{"人情往来", "送礼支出"},
+                new Object[]{"人情往来", "红包支出"},
+
+                new Object[]{"服饰美容", "服装鞋帽"},
+                new Object[]{"服饰美容", "化妆品"},
+                new Object[]{"服饰美容", "理发美容"}
+        )));
+    }
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("✅ 开始初始化分类数据...");
 
-        // 获取当前时间
         LocalDateTime now = LocalDateTime.now();
 
-        // 查询所有已存在的分类（按 name + type 去重）
-        List<Category> existingCategories = categoryMapper.selectByOwner(null, null);
+        // 查询所有已存在的分类，按 name + type 建立索引
+        List<Category> existingCategories = categoryMapper.selectAll();
         Map<String, Category> existingMap = existingCategories.stream()
                 .collect(Collectors.toMap(
                         c -> c.getName() + "_" + c.getType(),
                         c -> c,
-                        (existing, replacement) -> existing  // 保留已存在的
+                        (e1, e2) -> e1  // 保留第一个
                 ));
+
+        // 用于保存新插入或已存在的分类 ID
+        Map<String, Long> idMap = new HashMap<>();
+        existingCategories.forEach(c -> idMap.put(c.getName() + "_" + c.getType(), c.getId()));
 
         int insertedCount = 0;
 
-        for (Object[] data : INIT_DATA) {
-            Long parentId = (Long) data[0];
-            String type = (String) data[1];
-            String name = (String) data[2];
-            Integer isSystem = (Integer) data[3];
-            String visibility = (String) data[4];
+        for (Map.Entry<String, List<Object[]>> entry : INIT_DATA.entrySet()) {
+            String type = entry.getKey();
+            for (Object[] row : entry.getValue()) {
+                String parentName = (String) row[0];
+                String name = (String) row[1];
 
-            // 唯一键：name + type
-            String key = name + "_" + type;
+                String key = name + "_" + type;
+                if (existingMap.containsKey(key)) {
+                    // 已存在，跳过插入，但确保 idMap 有记录
+                    idMap.putIfAbsent(key, existingMap.get(key).getId());
+                    continue;
+                }
 
-            if (existingMap.containsKey(key)) {
-                // System.out.println("跳过已存在的分类: " + name + " (" + type + ")");
-                continue;
-            }
+                Category category = new Category();
+                category.setType(type);
+                category.setName(name);
+                category.setIsSystem(1);
+                category.setVisibility("P");
+                category.setCreatedBy(null);
+                category.setCreatedAt(now);
+                category.setUpdatedAt(now);
 
-            Category category = new Category();
-            category.setParentId(parentId);
-            category.setType(type);
-            category.setName(name);
-            category.setIsSystem(isSystem);
-            category.setVisibility(visibility);
-            category.setCreatedBy(null);
-            category.setCreatedAt(now);
-            category.setUpdatedAt(now);
+                // 设置 parentId
+                if (parentName != null) {
+                    String parentKey = parentName + "_" + type;
+                    Long parentId = idMap.get(parentKey);
+                    if (parentId != null) {
+                        category.setParentId(parentId);
+                    } else {
+                        System.err.println("❌ 父分类不存在: " + parentKey);
+                        continue;
+                    }
+                } else {
+                    category.setParentId(0L);
+                }
 
-            int result = categoryMapper.insert(category);
-            if (result > 0) {
-                System.out.println("✅ 插入分类: " + name + " (" + type + ")");
-                insertedCount++;
+                int result = categoryMapper.insert(category);
+                if (result > 0) {
+                    Long newId = category.getId(); // MyBatis 会自动回填主键
+                    idMap.put(key, newId);
+                    existingMap.put(key, category);
+                    System.out.println("✅ 插入分类: " + name + " (" + type + ")，ID: " + newId);
+                    insertedCount++;
+                }
             }
         }
 

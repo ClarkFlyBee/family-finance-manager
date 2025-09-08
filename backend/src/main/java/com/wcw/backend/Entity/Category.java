@@ -3,6 +3,7 @@ package com.wcw.backend.Entity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class Category {
@@ -15,4 +16,8 @@ public class Category {
     private Integer isSystem;   // 1: 系统内置, 0: 用户自定义
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // 树形结构
+    private List<Category> children;
+
 }

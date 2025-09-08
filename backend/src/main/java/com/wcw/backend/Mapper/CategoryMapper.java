@@ -9,6 +9,8 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
+    List<Category> selectAll();
+
     // 根据 ID 查询
     Category selectById(Long id);
 
