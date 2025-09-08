@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,9 +25,9 @@ public class IncomeDTO {
     @DecimalMin(value="0.01", message = "金额必须大于0")
     private BigDecimal amount;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "收入时间不能为空")
-    private LocalDateTime incTime;
+    private LocalDate incTime;
 
     private String remark;
     private Integer isDraft = 0;

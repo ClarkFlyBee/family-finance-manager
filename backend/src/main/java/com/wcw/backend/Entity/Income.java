@@ -1,8 +1,10 @@
 package com.wcw.backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +15,8 @@ public class Income {
     private String ownerType;   // F: 家庭，M: 个人
     private Long categoryId;
     private BigDecimal amount;
-    private LocalDateTime incTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate incTime;
     private String remark;
     private Integer isDraft;
     private LocalDateTime createdAt;
