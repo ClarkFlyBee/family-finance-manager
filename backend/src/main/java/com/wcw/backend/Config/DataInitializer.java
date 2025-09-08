@@ -4,6 +4,7 @@ import com.wcw.backend.Entity.Category;
 import com.wcw.backend.Mapper.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Order(1)
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
