@@ -5,6 +5,8 @@ import Register from '../views/Register.vue'
 import Layout from '../views/Layout.vue'
 import ExpenseList from '../views/expense/List.vue'
 import ExpenseForm from '../views/expense/Form.vue'
+import IncomeList from '../views/income/List.vue'
+import IncomeForm from '../views/income/Form.vue'
 
 const routes = [
   { path: '/login', component: Login },
@@ -16,7 +18,10 @@ const routes = [
     children: [
       { path: '/expense', component: ExpenseList },
       { path: '/expense/add', component: ExpenseForm },
-      { path: '/expense/edit/:id', component: ExpenseForm }
+      { path: '/expense/edit/:id', component: ExpenseForm },
+      { path: '/income', component: IncomeList },
+      { path: '/income/add', component: IncomeForm },
+      { path: '/income/edit/:id', component: IncomeForm },
     ]
   }
 ]
