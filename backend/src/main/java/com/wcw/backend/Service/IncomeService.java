@@ -77,8 +77,10 @@ public class IncomeService{
             incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getName());
         }
         incomeVO.setCategoryName(categoryMapper.selectById(income.getCategoryId()).getName());
+        incomeVO.setCategoryId(income.getCategoryId());
         incomeVO.setAmount(income.getAmount());
         incomeVO.setIncTime(income.getIncTime());
+        incomeVO.setRemark(income.getRemark());
         incomeVO.setCreatedAt(income.getCreatedAt());
 
         return incomeVO;

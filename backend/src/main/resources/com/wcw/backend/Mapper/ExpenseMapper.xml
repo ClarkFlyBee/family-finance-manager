@@ -23,6 +23,7 @@
         <result property="ownerType" column="owner_type"/>
         <result property="ownerName" column="owner_name"/>
         <result property="categoryName" column="category_name"/>
+        <result property="categoryId" column="category_id"/>
         <result property="amount" column="amount"/>
         <result property="expTime" column="exp_time"/>
         <result property="remark" column="remark"/>
@@ -86,6 +87,7 @@
         e.exp_no,
         e.owner_type,
         e.owner_id,
+        c.id AS category_id,
         c.name AS category_name,
         e.amount,
         e.exp_time,

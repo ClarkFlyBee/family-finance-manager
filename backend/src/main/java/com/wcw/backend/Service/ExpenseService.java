@@ -72,8 +72,10 @@ public class ExpenseService {
             expenseVO.setOwnerName(familyMapper.selectById(expense.getOwnerId()).getName());
         }
         expenseVO.setCategoryName(categoryMapper.selectById(expense.getCategoryId()).getName());
+        expenseVO.setCategoryId(expense.getCategoryId());
         expenseVO.setAmount(expense.getAmount());
         expenseVO.setExpTime(expense.getExpTime());
+        expenseVO.setRemark(expense.getRemark());
         expenseVO.setCreatedAt(expense.getCreatedAt());
 
         return expenseVO;
