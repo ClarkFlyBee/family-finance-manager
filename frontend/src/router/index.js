@@ -29,20 +29,29 @@ export const router = createRouter({
 // ✅ 添加：全局前置守卫
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const isAuthenticated = !!token
 
-  // 如果目标页面需要登录
+  // 1. 如果访问的是登录或注册页
+  if (to.path === '/login' || to.path === '/register') {
+    if (isAuthenticated) {
+      // 已登录，不允许再访问登录/注册页，跳转到主页
+      next('/')
+    } else {
+      // 未登录，允许访问登录/注册页
+      next()
+    }
+    return // ✅ 提前返回，避免继续执行
+  }
+
+  // 2. 如果访问的是需要登录的页面（如 /, /expense 等）
   if (to.meta.requiresAuth) {
-    if (token) {
+    if (isAuthenticated) {
       next() // 已登录，放行
     } else {
-      next('/login') // 未登录，跳转登录页
+      next('/login') // 未登录，跳登录
     }
   } else {
-    // 如果是登录页或注册页，且已登录，则跳过
-    if ((to.path === '/login' || to.path === '/register') && token) {
-      next('/') // 已登录，跳转首页
-    } else {
-      next() // 放行（比如去登录页）
-    }
+    // 其他不需要登录的页面（如果有）
+    next()
   }
 })

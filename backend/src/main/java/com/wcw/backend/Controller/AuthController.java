@@ -5,6 +5,8 @@ import com.wcw.backend.DTO.LoginDTO;
 import com.wcw.backend.DTO.RegisterDTO;
 import com.wcw.backend.Entity.User;
 import com.wcw.backend.Service.UserService;
+import com.wcw.backend.Util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +38,16 @@ public class AuthController {
     @GetMapping("/family/list")
     public Result<?> getAllFamily(){
         return Result.ok(userService.getAllFamily());
+    }
+
+    @GetMapping("/info")
+    public Result<?> getUserInfo(HttpServletRequest request){
+        Long userId = JwtUtil.getUserId(request);
+        Long familyId = JwtUtil.getFamilyId(request);
+
+        return Result.ok(Map.of(
+                "userId", userId,
+                "familyId", familyId
+        ));
     }
 }
