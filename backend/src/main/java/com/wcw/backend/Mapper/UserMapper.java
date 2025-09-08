@@ -25,4 +25,7 @@ public interface UserMapper{
     @Insert("INSERT INTO `user`(family_id, name, phone, password) VALUES(#{familyId}, #{name}, #{phone}, #{password})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(User user);
+
+    @Select("SELECT COUNT(*) > 0 FROM `user` WHERE id = #{id}")
+    boolean existsById(Long id);
 }
