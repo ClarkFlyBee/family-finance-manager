@@ -2,10 +2,7 @@ package com.wcw.backend.Mapper;
 
 
 import com.wcw.backend.Entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -28,4 +25,13 @@ public interface UserMapper{
 
     @Select("SELECT COUNT(*) > 0 FROM `user` WHERE id = #{id}")
     boolean existsById(Long id);
+
+    // 更新用户的 familyId
+    @Update("UPDATE user SET family_id = #{familyId}, updated_at = NOW() WHERE id = #{id}")
+    int updateFamilyId(User user);
+
+    // 更新密码
+    @Update("UPDATE user SET password = #{encodedPassword}, updated_at = NOW() WHERE id = #{userId}")
+    int updatePassword(@Param("userId") Long userId, @Param("encodedPassword") String encodedPassword);
+
 }

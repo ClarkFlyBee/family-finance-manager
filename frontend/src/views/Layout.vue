@@ -21,6 +21,9 @@
           <!-- ✅ 新增：智能分析菜单 -->
           <el-menu-item index="/analysis">
             <span>🧠 智能分析</span>
+          </el-menu-item>          
+          <el-menu-item index="/profile">
+            <span>👤 个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-aside>

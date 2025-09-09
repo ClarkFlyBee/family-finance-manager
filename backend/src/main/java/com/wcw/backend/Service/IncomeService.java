@@ -89,6 +89,14 @@ public class IncomeService{
     public PageResult listIncomes(QueryDTO query, int page, int size, Long userId) {
         int offset = (page - 1) * size;
 
+        System.out.println("❓ " + query.getOwnerId() + query.getOwnerType());
+        if (query.getOwnerId() == null){
+            query.setOwnerType("M");
+            query.setOwnerId(userId);
+
+            System.out.println("✅ " + query.getOwnerId() + query.getOwnerType());
+        }
+
         long total = incomeMapper.selectIncomeCount(query);
         List<IncomeVO> records = incomeMapper.selectIncomePage(query, offset, size);
 

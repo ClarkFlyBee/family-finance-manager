@@ -83,6 +83,15 @@ public class ExpenseService {
 
     public PageResult listExpenses(QueryDTO query, int page, int size, Long userId){
         int offset = (page - 1) * size;
+
+        System.out.println("❓ " + query.getOwnerId() + query.getOwnerType());
+        if (query.getOwnerId() == null){
+            query.setOwnerType("M");
+            query.setOwnerId(userId);
+
+            System.out.println("✅ " + query.getOwnerId() + query.getOwnerType());
+        }
+
         long total = expenseMapper.selectExpenseCount(query);
         List<ExpenseVO> records = expenseMapper.selectExpensePage(query, offset, size);
 
