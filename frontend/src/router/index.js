@@ -7,6 +7,7 @@ import ExpenseList from '../views/expense/List.vue'
 import ExpenseForm from '../views/expense/Form.vue'
 import IncomeList from '../views/income/List.vue'
 import IncomeForm from '../views/income/Form.vue'
+import FianaceAnalysisPanel from '../views/analysis/FianaceAnalysisPanel.vue'
 
 const routes = [
   { path: '/login', component: Login },
@@ -27,7 +28,8 @@ const routes = [
         name: 'Dashboard', 
         component: ()=> import('../views/dashboard/Index.vue'),
         meta: {title: '数据看板'}
-      }
+      },
+      { path: '/analysis', component: FianaceAnalysisPanel, meta: { title:"AI 财务分析" } }
     ]
   }
 ]
