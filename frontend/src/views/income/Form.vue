@@ -22,8 +22,14 @@
       </el-form-item>
 
       <el-form-item label="金额" prop="amount">
-        <el-input v-model.number="form.amount" type="number" placeholder="请输入金额" />
-      </el-form-item>
+        <el-input
+            v-model="form.amount"
+            type="number"
+            :step="0.01"
+            :precision="2"     
+            placeholder="请输入金额，如：99.99"
+        />
+    </el-form-item>
 
       <el-form-item label="时间" prop="incTime">
         <el-date-picker
@@ -89,7 +95,21 @@ const rules = {
   categoryId: [{ required: true, message: '请选择分类', trigger: 'change' }],
   amount: [
     { required: true, message: '请输入金额', trigger: 'blur' },
-    { type: 'number', min: 0.01, message: '金额必须大于0', trigger: 'blur' }
+    {
+      validator: (rule, value, callback) => {
+        const num = Number(value)
+        if (isNaN(num)) {
+          callback(new Error('请输入有效数字'))
+        } else if (num <= 0) {
+          callback(new Error('金额必须大于0'))
+        } else if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+          callback(new Error('最多保留两位小数'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
   ],
   incTime: [{ required: true, message: '请选择时间', trigger: 'change' }],
   ownerType: [{ required: true, message: '请选择归属范围', trigger: 'change' }]

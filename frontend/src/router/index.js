@@ -15,6 +15,7 @@ const routes = [
     path: '/',
     component: Layout,
     meta: { requiresAuth: true }, // ✅ 标记：需要登录才能访问
+    redirect: '/dashboard', // 新增：重定向到 dashboard
     children: [
       { path: '/expense', component: ExpenseList },
       { path: '/expense/add', component: ExpenseForm },
@@ -22,6 +23,11 @@ const routes = [
       { path: '/income', component: IncomeList },
       { path: '/income/add', component: IncomeForm },
       { path: '/income/edit/:id', component: IncomeForm },
+      { path: '/dashboard', 
+        name: 'Dashboard', 
+        component: ()=> import('../views/dashboard/Index.vue'),
+        meta: {title: '数据看板'}
+      }
     ]
   }
 ]

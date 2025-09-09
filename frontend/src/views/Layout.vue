@@ -1,9 +1,11 @@
 <!-- src/views/Layout.vue -->
+<!-- src/views/Layout.vue -->
 <template>
   <div class="layout">
     <el-container>
       <el-aside width="200px">
         <el-menu router :default-active="$route.path">
+          <el-menu-item index="/dashboard">📊 首页</el-menu-item> <!-- 新增首页菜单项 -->
           <el-menu-item index="/expense">
             <span>支出管理</span>
           </el-menu-item>
