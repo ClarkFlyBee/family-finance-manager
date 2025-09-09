@@ -72,4 +72,22 @@ public class JwtUtil {
             throw new BizException(500, "Token 解析失败：" + e.getMessage());
         }
     }
+
+    public static Long getFamilyId(HttpServletRequest request){
+        String token = extractToken(request);
+        if (token == null){
+            throw new BizException(401, "未提供登录凭证，请重新登录");
+        }
+
+        try{
+            Claims claims = JwtUtil.parse(token);
+            Long familyId = claims.get("fid", Long.class);
+            if (familyId == null){
+                throw new BizException(401, "Token 中不包含家庭信息");
+            }
+            return familyId;
+        } catch (Exception e){
+            throw new BizException(500, "Token 解析失败：" +  e.getMessage());
+        }
+    }
 }

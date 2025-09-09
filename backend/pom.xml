@@ -90,6 +90,12 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
+        <!-- 智谱AI -->
+        <dependency>
+            <groupId>ai.z.openapi</groupId>
+            <artifactId>zai-sdk</artifactId>
+            <version>0.0.4</version>
+        </dependency>
     </dependencies>
 
     <build>

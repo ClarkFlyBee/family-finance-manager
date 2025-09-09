@@ -50,5 +50,15 @@ services:
       db:
         condition: service_healthy
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
 volumes:
   db_data:

@@ -17,7 +17,7 @@ public interface FamilyMapper {
 
     @Select("SELECT * FROM family " +
             "where id = #{id}")
-    User selectById(Long id);
+    Family selectById(Long id);
 
     @Select("SELECT * FROM family")
     List<Family> selectAll();

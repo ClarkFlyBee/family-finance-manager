@@ -22,3 +22,6 @@ mybatis:
 logging:
   level:
     com.wcw.backend.Mapper: debug
+
+zhipu:
+  api-key: 18bc7ebf1ce34c659b5c2290f09dd6b6.UDA5qT2pBkE48EQ6

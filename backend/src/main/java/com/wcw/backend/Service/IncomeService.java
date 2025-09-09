@@ -74,11 +74,13 @@ public class IncomeService{
         if (income.getOwnerType().equals("M")) {
             incomeVO.setOwnerName(userMapper.selectById(income.getOwnerId()).getName());
         } else if(income.getOwnerType().equals("F")) {
-            incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getName());
+            incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getFamilyName());
         }
         incomeVO.setCategoryName(categoryMapper.selectById(income.getCategoryId()).getName());
+        incomeVO.setCategoryId(income.getCategoryId());
         incomeVO.setAmount(income.getAmount());
         incomeVO.setIncTime(income.getIncTime());
+        incomeVO.setRemark(income.getRemark());
         incomeVO.setCreatedAt(income.getCreatedAt());
 
         return incomeVO;
@@ -87,6 +89,14 @@ public class IncomeService{
     public PageResult listIncomes(QueryDTO query, int page, int size, Long userId) {
         int offset = (page - 1) * size;
 
+        System.out.println("❓ " + query.getOwnerId() + query.getOwnerType());
+        if (query.getOwnerId() == null){
+            query.setOwnerType("M");
+            query.setOwnerId(userId);
+
+            System.out.println("✅ " + query.getOwnerId() + query.getOwnerType());
+        }
+
         long total = incomeMapper.selectIncomeCount(query);
         List<IncomeVO> records = incomeMapper.selectIncomePage(query, offset, size);
 
@@ -94,7 +104,7 @@ public class IncomeService{
             if (record.getOwnerType().equals("M")) {
                 record.setOwnerName(userMapper.selectById(record.getOwnerId()).getName());
             } else if(record.getOwnerType().equals("F")) {
-                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getName());
+                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getFamilyName());
             }
         }
 

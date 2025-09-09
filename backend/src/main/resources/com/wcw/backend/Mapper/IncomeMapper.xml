@@ -23,6 +23,7 @@
         <result property="ownerType" column="owner_type"/>
         <result property="ownerName" column="owner_name"/>
         <result property="categoryName" column="category_name"/>
+        <result property="categoryId" column="category_id"/>
         <result property="amount" column="amount"/>
         <result property="incTime" column="inc_time"/>
         <result property="remark" column="remark"/>
@@ -86,6 +87,7 @@
         i.inc_no,
         i.owner_type,
         i.owner_id,
+        c.id AS category_id,
         c.name AS category_name,
         i.amount,
         i.inc_time,

@@ -69,11 +69,13 @@ public class ExpenseService {
         if (expense.getOwnerType().equals("M")) {
             expenseVO.setOwnerName(userMapper.selectById(expense.getOwnerId()).getName());
         } else if(expense.getOwnerType().equals("F")) {
-            expenseVO.setOwnerName(familyMapper.selectById(expense.getOwnerId()).getName());
+            expenseVO.setOwnerName(familyMapper.selectById(expense.getOwnerId()).getFamilyName());
         }
         expenseVO.setCategoryName(categoryMapper.selectById(expense.getCategoryId()).getName());
+        expenseVO.setCategoryId(expense.getCategoryId());
         expenseVO.setAmount(expense.getAmount());
         expenseVO.setExpTime(expense.getExpTime());
+        expenseVO.setRemark(expense.getRemark());
         expenseVO.setCreatedAt(expense.getCreatedAt());
 
         return expenseVO;
@@ -81,6 +83,15 @@ public class ExpenseService {
 
     public PageResult listExpenses(QueryDTO query, int page, int size, Long userId){
         int offset = (page - 1) * size;
+
+        System.out.println("❓ " + query.getOwnerId() + query.getOwnerType());
+        if (query.getOwnerId() == null){
+            query.setOwnerType("M");
+            query.setOwnerId(userId);
+
+            System.out.println("✅ " + query.getOwnerId() + query.getOwnerType());
+        }
+
         long total = expenseMapper.selectExpenseCount(query);
         List<ExpenseVO> records = expenseMapper.selectExpensePage(query, offset, size);
 
@@ -88,7 +99,7 @@ public class ExpenseService {
             if (record.getOwnerType().equals("M")) {
                 record.setOwnerName(userMapper.selectById(record.getOwnerId()).getName());
             } else if(record.getOwnerType().equals("F")) {
-                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getName());
+                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getFamilyName());
             }
         }
 

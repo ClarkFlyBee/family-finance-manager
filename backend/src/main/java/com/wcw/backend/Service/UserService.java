@@ -21,7 +21,7 @@ import java.util.List;
 public class UserService {
     private final UserMapper userMapper;
     private final FamilyMapper familyMapper;
-    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder encoder;
 
     /* 注册 */
     @Transactional
