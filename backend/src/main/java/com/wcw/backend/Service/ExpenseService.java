@@ -69,7 +69,7 @@ public class ExpenseService {
         if (expense.getOwnerType().equals("M")) {
             expenseVO.setOwnerName(userMapper.selectById(expense.getOwnerId()).getName());
         } else if(expense.getOwnerType().equals("F")) {
-            expenseVO.setOwnerName(familyMapper.selectById(expense.getOwnerId()).getName());
+            expenseVO.setOwnerName(familyMapper.selectById(expense.getOwnerId()).getFamilyName());
         }
         expenseVO.setCategoryName(categoryMapper.selectById(expense.getCategoryId()).getName());
         expenseVO.setCategoryId(expense.getCategoryId());
@@ -90,7 +90,7 @@ public class ExpenseService {
             if (record.getOwnerType().equals("M")) {
                 record.setOwnerName(userMapper.selectById(record.getOwnerId()).getName());
             } else if(record.getOwnerType().equals("F")) {
-                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getName());
+                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getFamilyName());
             }
         }
 

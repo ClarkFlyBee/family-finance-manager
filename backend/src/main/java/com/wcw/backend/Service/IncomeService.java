@@ -74,7 +74,7 @@ public class IncomeService{
         if (income.getOwnerType().equals("M")) {
             incomeVO.setOwnerName(userMapper.selectById(income.getOwnerId()).getName());
         } else if(income.getOwnerType().equals("F")) {
-            incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getName());
+            incomeVO.setOwnerName(familyMapper.selectById(income.getOwnerId()).getFamilyName());
         }
         incomeVO.setCategoryName(categoryMapper.selectById(income.getCategoryId()).getName());
         incomeVO.setCategoryId(income.getCategoryId());
@@ -96,7 +96,7 @@ public class IncomeService{
             if (record.getOwnerType().equals("M")) {
                 record.setOwnerName(userMapper.selectById(record.getOwnerId()).getName());
             } else if(record.getOwnerType().equals("F")) {
-                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getName());
+                record.setOwnerName(familyMapper.selectById(record.getOwnerId()).getFamilyName());
             }
         }
 
